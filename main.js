@@ -2,30 +2,46 @@ function init() {
   window.shootElem = document.getElementById('bullet');
   window.bulletListElem = document.getElementById('bullet-list');
   setPlayer();
-  setEnemy();
+  setEnemies();
   listenForShoot();
+  listenForKeys();
 }
 
 function setPlayer() {
-  window.enemyElem = document.getElementById('player');
-  window.enemyElem.style.display = 'block';
-  window.enemyElem.style.position = 'absolute';
-  window.enemyElem.style.top = '550px';
-  window.enemyElem.style.left = '495px';
+  window.playerElem = document.getElementById('player');
+  window.playerElem.style.display = 'block';
+  window.playerElem.style.position = 'absolute';
+  window.playerElem.style.top = '550px';
+  window.playerElem.style.left = '495px';
 }
 
-function setEnemy() {
+function movePlayer(direction) {
+  if (direction === 'left') {
+    const newPosition = window.playerElem.getBoundingClientRect().left - 10;
+    window.playerElem.style.left = `${newPosition}px`;
+  } else if (direction === 'right') {
+    const newPosition = window.playerElem.getBoundingClientRect().left + 10;
+    window.playerElem.style.left = `${newPosition}px`;
+  }
+}
+
+function setEnemies() {
   window.enemyListElem = document.getElementById('enemy-list');
   window.originEnemyElem = document.getElementById('enemy');
-  let leftPosition = 200;
-  for (let i = 0; i < 6; i++) {
-    const clone = window.originEnemyElem.cloneNode(false);
-    clone.style.display = 'block';
-    clone.style.position = 'absolute';
-    clone.style.top = '150px';
-    clone.style.left = leftPosition.toString() + 'px';
-    leftPosition += 100;
-    window.enemyListElem.appendChild(clone);
+
+  let topPosition = 150;
+  for (let i = 0; i < 5; i++) {
+    let leftPosition = 200;
+    for (let i = 0; i < 6; i++) {
+      const clone = window.originEnemyElem.cloneNode(false);
+      clone.style.display = 'block';
+      clone.style.position = 'absolute';
+      clone.style.top = `${topPosition}px`;
+      clone.style.left = leftPosition.toString() + 'px';
+      leftPosition += 100;
+      window.enemyListElem.appendChild(clone);
+    }
+    topPosition += 50;
   }
 }
 
@@ -36,26 +52,48 @@ function shoot() {
   clone.style.position = 'absolute';
   clone.style.top = '530px';
   clone.style.left = '500px';
+  clone.style.zIndex = '10';
   window.bulletListElem.appendChild(clone);
 
-  let topPosition = 480;
+  let topPosition = 530;
   clone.style.top = `${topPosition}px`;
+  topPosition -= 10;
   const intervalId = setInterval(() => {
-    console.log(`hi from ${topPosition}`);
     clone.style.top = `${topPosition}px`;
-    topPosition -= 50;
-    console.log(`bye from ${topPosition}`);
-  }, 200);
+    topPosition -= 10;
+  }, 20);
   setTimeout(() => {
     clearInterval(intervalId);
-  }, 3000);
+    clone.remove();
+  }, 11_000);
+}
+
+function checkCollisions() {
+  // get locations of all enemies on viewport grid
+  window.enemyListElem.childNodes.forEach(enemy => {
+    console.log(enemy);
+    console.log(enemy.getBoundingClientRect());
+  });
+
+  // get location of all shots on viewport grid
+
+  // check overlapping of the two
 }
 
 function listenForShoot() {
   document.addEventListener('keyup', function(event) {
     if (event.key === ' ') {
-      console.log('space key was pressed');
       shoot();
+    }
+  });
+}
+
+function listenForKeys() {
+  document.addEventListener('keyup', function(event) {
+    if (event.key === 'ArrowLeft') {
+      movePlayer('left');
+    } else if (event.key === 'ArrowRight') {
+      movePlayer('right');
     }
   });
 }

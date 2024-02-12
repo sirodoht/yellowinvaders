@@ -161,8 +161,18 @@ main {
 }
 
 #player {
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 14px;
+    background: lime;
+}
+
+#player::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: -20px;
+    width: 50px;
+    height: 16px;
     background: lime;
 }
 
@@ -175,7 +185,7 @@ main {
 
 #bullet {
     display: none;
-    width: 5px;
-    height: 5px;
+    width: 3px;
+    height: 17px;
     background: red;
 }
