@@ -57,11 +57,16 @@ function shoot() {
 
   let topPosition = 530;
   clone.style.top = `${topPosition}px`;
-  topPosition -= 10;
+  //topPosition -= 10;
+  topPosition -= 100;
   const intervalId = setInterval(() => {
     clone.style.top = `${topPosition}px`;
-    topPosition -= 10;
-  }, 20);
+    //topPosition -= 10;
+    topPosition -= 100;
+
+    checkCollisions();
+  //}, 20);
+  }, 1000);
   setTimeout(() => {
     clearInterval(intervalId);
     clone.remove();
@@ -71,11 +76,19 @@ function shoot() {
 function checkCollisions() {
   // get locations of all enemies on viewport grid
   window.enemyListElem.childNodes.forEach(enemy => {
-    console.log(enemy);
-    console.log(enemy.getBoundingClientRect());
-  });
+    const enemyX = enemy.getBoundingClientRect().x;
+    const enemyY = enemy.getBoundingClientRect().y;
 
-  // get location of all shots on viewport grid
+    // get location of all shots on viewport grid (happens for every enemy)
+    window.bulletListElem.childNodes.forEach(bullet => {
+      console.log(`bullet: x: ${bullet.getBoundingClientRect().x} | y: ${bullet.getBoundingClientRect().y}`);
+      const m = {
+        x: enemy.getBoundingClientRect().x,
+        y: enemy.getBoundingClientRect().y,
+      };
+    });
+
+  });
 
   // check overlapping of the two
 }
